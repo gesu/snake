@@ -74,6 +74,14 @@ Game.prototype.drawFrame = function() {
         stopAnimation = true;
     }
 
+    this._snakeSquares.forEach(function(snakeSquare) {
+        if (nextSnakeSquare.xPosition - snakeSquare.xPosition === 0
+            && nextSnakeSquare.yPosition - snakeSquare.yPosition === 0
+        ) {
+            stopAnimation = true;
+        }
+    })
+
     var lastSnakeSquare = this._snakeSquares[0];
 
     var increaseLength = false;
