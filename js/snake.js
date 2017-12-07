@@ -13,8 +13,8 @@ Game.prototype.getDefaultOptions = function() {
     return {
         snakeColor: 'red',
         initialSnakeLength: 4,
-        foodSquares: 100,
-        foodColor: 'blue',
+        foodSquares: 1,
+        foodColor: 'white',
     };
 }
 
@@ -63,6 +63,8 @@ Game.prototype.drawFrame = function() {
             this._snakeSquaresToAdd = this._snakeSquaresToAdd.concat(nextSnakeSquare);
             this._gameScore = this._gameScore + foodSquare.score;
             this._foodSquares.splice(index, 1);
+
+            this.generateNewFoodSquare();
         }
     }.bind(this));
 
@@ -151,6 +153,15 @@ Game.prototype.initializeFoodSquares = function() {
             xPosition, yPosition
         ));
     }
+}
+
+Game.prototype.generateNewFoodSquare = function() {
+    var xPosition = Math.floor(Math.random() * this._width);
+    var yPosition = Math.floor(Math.random() * this._height);
+
+    this._foodSquares = this._foodSquares.concat(new FoodSquare(
+        xPosition, yPosition
+    ));
 }
 
 var KEYBOARD_CODES = {
