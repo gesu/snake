@@ -2,18 +2,17 @@ function Game(options) {
     this._options = Object.assign({}, this.getDefaultOptions(), options);
     this.setGameContext();
     this.initializeSnakeSquares();
+    this.initializeFoodSquares();
+    this.setMovementUp();
     this.addEventListeners();
-
-    this._moveVector = {
-        xComponent: 0,
-        yComponent: -1,
-    };
 }
 
 Game.prototype.getDefaultOptions = function() {
     return {
         snakeColor: 'red',
         initialSnakeLength: 4,
+        foodSquares: 100,
+        foodColor: 'blue',
     };
 }
 
@@ -55,6 +54,15 @@ Game.prototype.drawFrame = function() {
 
     var stopAnimation = false;
 
+    this._foodSquares.forEach(function(foodSquare, index) {
+        if (foodSquare.xPosition === nextSnakeSquare.xPosition
+            && foodSquare.yPosition === nextSnakeSquare.yPosition
+        ) {
+            this._snakeSquaresToAdd = this._snakeSquaresToAdd.concat(nextSnakeSquare);
+            this._foodSquares.splice(index, 1);
+        }
+    }.bind(this));
+
     if (nextSnakeSquare.xPosition >= this._width
         || nextSnakeSquare.xPosition < 0
         || nextSnakeSquare.yPosition >= this._height
@@ -63,8 +71,28 @@ Game.prototype.drawFrame = function() {
         stopAnimation = true;
     }
 
-    this._snakeSquares = this._snakeSquares.slice(1);
-    this._snakeSquares = this._snakeSquares.concat([nextSnakeSquare]);
+    var lastSnakeSquare = this._snakeSquares[0];
+
+    var increaseLength = false;
+    this._snakeSquaresToAdd.forEach(function(snakeSquare, index) {
+        if (snakeSquare.xPosition === lastSnakeSquare.xPosition
+            && snakeSquare.yPosition === lastSnakeSquare.yPosition
+        ) {
+            increaseLength = true;
+            this._snakeSquaresToAdd.splice(index, 1);
+        }
+    }.bind(this));
+
+    if (!increaseLength) {
+        this._snakeSquares = this._snakeSquares.slice(1);
+    }
+
+    this._snakeSquares = this._snakeSquares.concat(nextSnakeSquare);
+
+    this._foodSquares.forEach(function(foodSquare) {
+        this._ctx.fillStyle = this._options.foodColor;
+        this._ctx.fillRect(foodSquare.xPosition, foodSquare.yPosition, 1, 1);
+    }.bind(this))
 
     this._snakeSquares.forEach(function(snakeSquare) {
         this._ctx.fillStyle = this._options.snakeColor;
@@ -86,6 +114,20 @@ Game.prototype.initializeSnakeSquares = function() {
     for (var i = 0; i < this._snakeLength; i ++) {
         this._snakeSquares = this._snakeSquares.concat(new SnakeSquare(
             xPosition, ++yPosition
+        ));
+    }
+
+    this._snakeSquaresToAdd = [];
+}
+
+Game.prototype.initializeFoodSquares = function() {
+    this._foodSquares = [];
+    for (var i = 0; i < this._options.foodSquares; i++) {
+        var xPosition = Math.floor(Math.random() * this._width);
+        var yPosition = Math.floor(Math.random() * this._height);
+
+        this._foodSquares = this._foodSquares.concat(new FoodSquare(
+            xPosition, yPosition
         ));
     }
 }
@@ -146,6 +188,12 @@ Game.prototype.start = function() {
 function SnakeSquare(xPosition, yPosition) {
     this.xPosition = xPosition;
     this.yPosition = yPosition;
+}
+
+function FoodSquare(xPosition, yPosition, score) {
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
+    this.score = score || 100;
 }
 
 var game = new Game();
