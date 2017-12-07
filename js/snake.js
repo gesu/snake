@@ -5,6 +5,8 @@ function Game(options) {
     this.initializeFoodSquares();
     this.setMovementUp();
     this.addEventListeners();
+
+    this._gameScore = 0;
 }
 
 Game.prototype.getDefaultOptions = function() {
@@ -59,6 +61,7 @@ Game.prototype.drawFrame = function() {
             && Math.abs(foodSquare.yPosition - nextSnakeSquare.yPosition) <= 5
         ) {
             this._snakeSquaresToAdd = this._snakeSquaresToAdd.concat(nextSnakeSquare);
+            this._gameScore = this._gameScore + foodSquare.score;
             this._foodSquares.splice(index, 1);
         }
     }.bind(this));
@@ -99,9 +102,19 @@ Game.prototype.drawFrame = function() {
         this._ctx.fillRect(snakeSquare.xPosition, snakeSquare.yPosition, 5, 5);
     }.bind(this));
 
+    this.drawScore();
+
     if (!stopAnimation) {
         window.requestAnimationFrame(this.drawFrame.bind(this));
     }
+}
+
+Game.prototype.drawScore = function() {
+    var xPosition = Math.floor(this._width / 2);
+    var yPosition = Math.floor(this._height / 2);
+
+    this._ctx.font = '48px mono';
+    this._ctx.fillText(this._gameScore, xPosition, yPosition);
 }
 
 Game.prototype.initializeSnakeSquares = function() {
