@@ -55,8 +55,8 @@ Game.prototype.drawFrame = function() {
     var stopAnimation = false;
 
     this._foodSquares.forEach(function(foodSquare, index) {
-        if (foodSquare.xPosition === nextSnakeSquare.xPosition
-            && foodSquare.yPosition === nextSnakeSquare.yPosition
+        if (Math.abs(foodSquare.xPosition - nextSnakeSquare.xPosition) <= 5
+            && Math.abs(foodSquare.yPosition - nextSnakeSquare.yPosition) <= 5
         ) {
             this._snakeSquaresToAdd = this._snakeSquaresToAdd.concat(nextSnakeSquare);
             this._foodSquares.splice(index, 1);
@@ -91,12 +91,12 @@ Game.prototype.drawFrame = function() {
 
     this._foodSquares.forEach(function(foodSquare) {
         this._ctx.fillStyle = this._options.foodColor;
-        this._ctx.fillRect(foodSquare.xPosition, foodSquare.yPosition, 1, 1);
+        this._ctx.fillRect(foodSquare.xPosition, foodSquare.yPosition, 5, 5);
     }.bind(this))
 
     this._snakeSquares.forEach(function(snakeSquare) {
         this._ctx.fillStyle = this._options.snakeColor;
-        this._ctx.fillRect(snakeSquare.xPosition, snakeSquare.yPosition, 1, 1);
+        this._ctx.fillRect(snakeSquare.xPosition, snakeSquare.yPosition, 5, 5);
     }.bind(this));
 
     if (!stopAnimation) {
@@ -156,27 +156,27 @@ Game.prototype.addEventListeners = function() {
 Game.prototype.setMovementUp = function() {
     this._moveVector = {
         xComponent: 0,
-        yComponent: -1,
+        yComponent: -5,
     }
 }
 
 Game.prototype.setMovementDown = function() {
     this._moveVector = {
         xComponent: 0,
-        yComponent: 1,
+        yComponent: 5,
     }
 }
 
 Game.prototype.setMovementRight = function() {
     this._moveVector = {
-        xComponent: 1,
+        xComponent: 5,
         yComponent: 0,
     }
 }
 
 Game.prototype.setMovementLeft = function() {
     this._moveVector = {
-        xComponent: -1,
+        xComponent: -5,
         yComponent: 0,
     }
 }
