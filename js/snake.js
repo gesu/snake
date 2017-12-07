@@ -14,6 +14,7 @@ Game.prototype.getDefaultOptions = function() {
     return {
         gameMountId: 'game-mount',
         toggleAIButtonId: 'toggle-ai-button',
+        restartButtonId: 'restart-button',
         snakeColor: 'red',
         initialSnakeLength: 4,
         foodSquares: 100,
@@ -137,7 +138,7 @@ Game.prototype.drawFrame = function() {
     }.bind(this));
 
     if (!stopAnimation) {
-        window.requestAnimationFrame(this.drawFrame.bind(this));
+        this._nextFrame = window.requestAnimationFrame(this.drawFrame.bind(this));
     }
 }
 
@@ -219,10 +220,27 @@ Game.prototype.addEventListeners = function() {
     }.bind(this));
 
     var toggleAIButton = document.getElementById(this._options.toggleAIButtonId);
-
     toggleAIButton.addEventListener('click', function(e) {
         this._AIEnabled = !this._AIEnabled;
-    }.bind(this))
+    }.bind(this));
+
+    var restartButton = document.getElementById(this._options.restartButtonId);
+    restartButton.addEventListener('click', function(e) {
+        this.restartGame();
+    }.bind(this));
+}
+
+Game.prototype.restartGame = function() {
+    this.setGameContext();
+    this.initializeSnakeSquares();
+    this.initializeFoodSquares();
+    this.setMovementUp();
+
+    this._AIEnabled = true;
+    this._gameScore = 0;
+
+    window.cancelAnimationFrame(this._nextFrame);
+    this.start();
 }
 
 Game.prototype.setMovementUp = function() {
@@ -270,7 +288,7 @@ Game.prototype.isMovingDown = function() {
 }
 
 Game.prototype.start = function() {
-    window.requestAnimationFrame(this.drawFrame.bind(this));
+    this._nextFrame = window.requestAnimationFrame(this.drawFrame.bind(this));
 };
 
 function SnakeSquare(xPosition, yPosition) {
