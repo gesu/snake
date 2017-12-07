@@ -46,24 +46,33 @@ Game.prototype.clearCanvas = function() {
 Game.prototype.drawFrame = function() {
     this.clearCanvas();
 
-    var lastSnakeSquare = this._snakeSquares[0];
     var firstSnakeSquare = this._snakeSquares[this._snakeSquares.length - 1];
+    var nextSnakeSquare = new SnakeSquare(
+        firstSnakeSquare.xPosition + this._moveVector.xComponent,
+        firstSnakeSquare.yPosition + this._moveVector.yComponent
+    );
+
+    var stopAnimation = false;
+
+    if (nextSnakeSquare.xPosition >= this._width
+        || nextSnakeSquare.xPosition < 0
+        || nextSnakeSquare.yPosition >= this._height
+        || nextSnakeSquare.yPosition < 0
+    ) {
+        stopAnimation = true;
+    }
 
     this._snakeSquares = this._snakeSquares.slice(1);
-
-    this._snakeSquares = this._snakeSquares.concat([
-        new SnakeSquare(
-            firstSnakeSquare.xPosition + this._moveVector.xComponent,
-            firstSnakeSquare.yPosition + this._moveVector.yComponent
-        )
-    ]);
+    this._snakeSquares = this._snakeSquares.concat([nextSnakeSquare]);
 
     this._snakeSquares.forEach(function(snakeSquare) {
         this._ctx.fillStyle = this._options.snakeColor;
         this._ctx.fillRect(snakeSquare.xPosition, snakeSquare.yPosition, 1, 1);
     }.bind(this));
 
-    window.requestAnimationFrame(this.drawFrame.bind(this));
+    if (!stopAnimation) {
+        window.requestAnimationFrame(this.drawFrame.bind(this));
+    }
 }
 
 Game.prototype.initializeSnakeSquares = function() {
