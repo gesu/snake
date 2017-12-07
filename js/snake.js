@@ -90,6 +90,8 @@ Game.prototype.drawFrame = function() {
         this._snakeSquares = this._snakeSquares.slice(1);
     }
 
+    this.drawScore();
+
     this._snakeSquares = this._snakeSquares.concat(nextSnakeSquare);
 
     this._foodSquares.forEach(function(foodSquare) {
@@ -101,8 +103,6 @@ Game.prototype.drawFrame = function() {
         this._ctx.fillStyle = this._options.snakeColor;
         this._ctx.fillRect(snakeSquare.xPosition, snakeSquare.yPosition, 5, 5);
     }.bind(this));
-
-    this.drawScore();
 
     if (!stopAnimation) {
         window.requestAnimationFrame(this.drawFrame.bind(this));
