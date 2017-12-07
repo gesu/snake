@@ -2,6 +2,7 @@ function Game(options) {
     this._options = Object.assign({}, this.getDefaultOptions(), options);
     this.setGameContext();
     this.initializeSnakeSquares();
+    this.addEventListeners();
 
     this._moveVector = {
         xComponent: 0,
@@ -83,10 +84,58 @@ Game.prototype.initializeSnakeSquares = function() {
 
     this._snakeSquares = [];
     for (var i = 0; i < this._snakeLength; i ++) {
-        console.log(this._snakeSquares);
         this._snakeSquares = this._snakeSquares.concat(new SnakeSquare(
             xPosition, ++yPosition
         ));
+    }
+}
+
+var KEYBOARD_CODES = {
+    leftArrow: 37,
+    upArrow: 38,
+    rightArrow: 39,
+    downArrow: 40,
+}
+
+Game.prototype.addEventListeners = function() {
+    window.addEventListener('keydown', function(e) {
+        if (e.keyCode === KEYBOARD_CODES.leftArrow) {
+            this.setMovementLeft();
+        } else if (e.keyCode === KEYBOARD_CODES.upArrow) {
+            this.setMovementUp();
+        } else if (e.keyCode === KEYBOARD_CODES.rightArrow) {
+            this.setMovementRight();
+        } else if (e.keyCode === KEYBOARD_CODES.downArrow) {
+            this.setMovementDown();
+        }
+    }.bind(this));
+}
+
+Game.prototype.setMovementUp = function() {
+    this._moveVector = {
+        xComponent: 0,
+        yComponent: -1,
+    }
+}
+
+Game.prototype.setMovementDown = function() {
+    this._moveVector = {
+        xComponent: 0,
+        yComponent: 1,
+    }
+}
+
+Game.prototype.setMovementRight = function() {
+    this._moveVector = {
+        xComponent: 1,
+        yComponent: 0,
+    }
+}
+
+Game.prototype.setMovementLeft = function() {
+    this._moveVector = {
+        xComponent: -1,
+        yComponent: 0,
     }
 }
 
