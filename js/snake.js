@@ -6,6 +6,7 @@ function Game(options) {
     this.setMovementUp();
     this.addEventListeners();
 
+    this._AIEnabled = true;
     this._gameScore = 0;
 }
 
@@ -104,6 +105,24 @@ Game.prototype.drawFrame = function() {
 
     this._snakeSquares = this._snakeSquares.concat(nextSnakeSquare);
 
+    if (this._AIEnabled) {
+        var goal = this._foodSquares[0];
+
+        if (Math.abs(goal.xPosition - nextSnakeSquare.xPosition) > 5) {
+            if (goal.xPosition - nextSnakeSquare.xPosition > 0) {
+                !this.isMovingLeft() && this.setMovementRight();
+            } else {
+                !this.isMovingRight() && this.setMovementLeft();
+            }
+        } else if (Math.abs(goal.yPosition - nextSnakeSquare.yPosition) > 5) {
+            if (goal.yPosition - nextSnakeSquare.yPosition > 0) {
+                !this.isMovingUp() && this.setMovementDown();
+            } else {
+                !this.isMovingDown() && this.setMovementUp();
+            }
+        }
+    }
+
     this._foodSquares.forEach(function(foodSquare) {
         this._ctx.fillStyle = this._options.foodColor;
         this._ctx.fillRect(foodSquare.xPosition, foodSquare.yPosition, 5, 5);
@@ -173,6 +192,10 @@ var KEYBOARD_CODES = {
 
 Game.prototype.addEventListeners = function() {
     window.addEventListener('keydown', function(e) {
+        if (this._AIEnabled) {
+            return;
+        }
+
         if (e.keyCode === KEYBOARD_CODES.leftArrow) {
             !this.isMovingRight() && this.setMovementLeft();
         } else if (e.keyCode === KEYBOARD_CODES.upArrow) {
