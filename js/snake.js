@@ -163,13 +163,13 @@ var KEYBOARD_CODES = {
 Game.prototype.addEventListeners = function() {
     window.addEventListener('keydown', function(e) {
         if (e.keyCode === KEYBOARD_CODES.leftArrow) {
-            this.setMovementLeft();
+            !this.isMovingRight() && this.setMovementLeft();
         } else if (e.keyCode === KEYBOARD_CODES.upArrow) {
-            this.setMovementUp();
+            !this.isMovingDown() && this.setMovementUp();
         } else if (e.keyCode === KEYBOARD_CODES.rightArrow) {
-            this.setMovementRight();
+            !this.isMovingLeft() && this.setMovementRight();
         } else if (e.keyCode === KEYBOARD_CODES.downArrow) {
-            this.setMovementDown();
+            !this.isMovingUp() && this.setMovementDown();
         }
     }.bind(this));
 }
@@ -200,6 +200,22 @@ Game.prototype.setMovementLeft = function() {
         xComponent: -5,
         yComponent: 0,
     }
+}
+
+Game.prototype.isMovingLeft = function() {
+    return this._moveVector.xComponent === -5;
+}
+
+Game.prototype.isMovingRight = function() {
+    return this._moveVector.xComponent === 5;
+}
+
+Game.prototype.isMovingUp = function() {
+    return this._moveVector.yComponent === -5;
+}
+
+Game.prototype.isMovingDown = function() {
+    return this._moveVector.yComponent === 5;
 }
 
 Game.prototype.start = function() {
