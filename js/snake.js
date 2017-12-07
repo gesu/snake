@@ -12,9 +12,11 @@ function Game(options) {
 
 Game.prototype.getDefaultOptions = function() {
     return {
+        gameMountId: 'game-mount',
+        toggleAIButtonId: 'toggle-ai-button',
         snakeColor: 'red',
         initialSnakeLength: 4,
-        foodSquares: 1,
+        foodSquares: 100,
         foodColor: 'white',
     };
 }
@@ -31,7 +33,7 @@ Game.prototype.setBoundaries = function() {
 };
 
 Game.prototype.setCanvas = function() {
-    this._canvas = document.getElementById('game-mount');
+    this._canvas = document.getElementById(this._options.gameMountId);
     this._canvas.style.width = this._width;
     this._canvas.style.height = this._height;
 }
@@ -102,6 +104,7 @@ Game.prototype.drawFrame = function() {
     }
 
     this.drawScore();
+    this.drawAIStatus();
 
     this._snakeSquares = this._snakeSquares.concat(nextSnakeSquare);
 
@@ -139,11 +142,19 @@ Game.prototype.drawFrame = function() {
 }
 
 Game.prototype.drawScore = function() {
-    var xPosition = Math.floor(this._width / 2);
-    var yPosition = Math.floor(this._height / 2);
+    var xPosition = 50;
+    var yPosition = 50;
 
-    this._ctx.font = '48px mono';
-    this._ctx.fillText(this._gameScore, xPosition, yPosition);
+    this._ctx.font = '30px monospace';
+    this._ctx.fillText('score: ' + this._gameScore, xPosition, yPosition);
+}
+
+Game.prototype.drawAIStatus = function() {
+    var xPosition = 50;
+    var yPosition = 85;
+
+    this._ctx.font = '30px monospace';
+    this._ctx.fillText('autoplay: ' + (this._AIEnabled ? 'on' : 'off'), xPosition, yPosition);
 }
 
 Game.prototype.initializeSnakeSquares = function() {
@@ -206,6 +217,12 @@ Game.prototype.addEventListeners = function() {
             !this.isMovingUp() && this.setMovementDown();
         }
     }.bind(this));
+
+    var toggleAIButton = document.getElementById(this._options.toggleAIButtonId);
+
+    toggleAIButton.addEventListener('click', function(e) {
+        this._AIEnabled = !this._AIEnabled;
+    }.bind(this))
 }
 
 Game.prototype.setMovementUp = function() {
