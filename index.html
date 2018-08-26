@@ -1,19 +1,27 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-        <link href="css/snake.css" rel="stylesheet">
-    </head>
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-74499701-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'UA-74499701-2');
+    </script>
 
-    <body>
-        <button class="absolute-position" id="toggle-ai-button">
-            Toggle Self-Play
-        </button>
-        <button class="absolute-position custom-restart-button-margin" id="restart-button">
-            Restart
-        </button>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link href="css/snake.css" rel="stylesheet">
+  </head>
 
-        <canvas id="game-mount" />
-        <script src="js/snake.js"></script>
-    </body>
+  <body>
+    <button class="absolute-position" id="toggle-ai-button">
+      Toggle Self-Play
+    </button>
+    <button class="absolute-position custom-restart-button-margin" id="restart-button">
+      Restart
+    </button>
+
+    <canvas id="game-mount" />
+    <script src="js/snake.js"></script>
+  </body>
 </html>
